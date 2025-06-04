@@ -1,0 +1,40 @@
+import fs from 'fs-extra';
+import path from 'path';
+import { capitalize, pluralizeWord } from '../utils/helpers';
+import { Properties } from '../types/workflow';
+import { createNew } from './controller/createNew';
+import { getAll } from './controller/getAll';
+import { getById } from './controller/getById';
+import { update } from './controller/update';
+import { deleteById } from './controller/delete';
+
+export const generateController = async (name: string, baseDir: string, properties?: Properties[]) => {
+  const controllerName = pluralizeWord(capitalize(name));
+  const allData = pluralizeWord(name);
+  const getAllfunc = getAll(name, controllerName, allData);
+  const createFunc = createNew(name, properties)
+  const getByIdFunc = getById(name);
+  const updateByIdFunc = update(name, properties)
+  const deleteByIdFunc = deleteById(name);
+  const code = `
+import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
+${createFunc && `import { z } from 'zod';
+import { ${capitalize(name)}Type } from "../types/${name}";
+`}
+
+const prisma = new PrismaClient();
+  ${getAllfunc}
+  ${createFunc}
+  ${getByIdFunc}
+  ${updateByIdFunc}
+  ${deleteByIdFunc}
+`;
+
+  const targetPath = path.join(baseDir, 'src/controllers');
+  await fs.ensureDir(targetPath);
+
+  const file = path.join(targetPath, `${name}.controller.ts`);
+  await fs.writeFile(file, code);
+};
+
