@@ -17,6 +17,7 @@ export type Workflows = {
     id: string;
     name: string;
     workflows: Workflow[]
+    cors?: CorsOptionsCustom;
 }
 
 export type Workflow = {
