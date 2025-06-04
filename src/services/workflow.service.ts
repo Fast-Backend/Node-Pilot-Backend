@@ -5,6 +5,7 @@ import { generateController } from '../generators/controller.generator';
 import { generateRoute } from '../generators/route.generator';
 import { generateType } from '../generators/type.generator';
 import { generateAppTs } from '../generators/app.generator';
+import { generateServerTs } from '../generators/server.generator';
 
 export const generateWorkflow = async () => {
     const workflow = workflows.workflows;
@@ -25,6 +26,7 @@ export const generateWorkflow = async () => {
 
     }
     await generateAppTs(baseDir, controllerNames, workflows.cors)
+    await generateServerTs(baseDir);
 
     return { message: 'Workflow generated successfully.' };
 };
