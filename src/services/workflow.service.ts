@@ -24,7 +24,7 @@ export const generateWorkflow = async () => {
         await generateRoute(controller.controllers.name, controller.controllers.routes, baseDir);
 
     }
-    await generateAppTs(baseDir, controllerNames)
+    await generateAppTs(baseDir, controllerNames, workflows.cors)
 
     return { message: 'Workflow generated successfully.' };
 };
