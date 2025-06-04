@@ -1,10 +1,12 @@
 import path from 'path';
 import fs from 'fs-extra';
+import { CorsOptionsCustom } from '../types/workflow';
 
 
 export const generateAppTs = async (
     baseDir: string,
-    routes: string[] = []
+    routes: string[] = [],
+    cors?: CorsOptionsCustom
 ) => {
     const routeImports = routes
         .map(
@@ -20,6 +22,11 @@ export const generateAppTs = async (
         )
         .join('\n');
 
+    const corsConfig =
+        cors && Object.keys(cors).length > 0
+            ? `app.use(cors(${JSON.stringify(cors, null, 2)}));`
+            : 'app.use(cors());';
+
     const content = `
 import express from 'express';
 import cors from 'cors';
@@ -27,7 +34,7 @@ ${routeImports}
 
 const app = express();
 
-app.use(cors());
+${corsConfig}
 app.use(express.json());
 
 app.get('/', (req, res) => {
