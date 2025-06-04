@@ -71,3 +71,48 @@ export type UserType = {
     name?: string | null;
     age: number;
 };
+
+type StaticOrigin = boolean | string | RegExp | (string | RegExp)[];
+
+type CorsHttpMethod =
+    | 'GET'
+    | 'POST'
+    | 'PUT'
+    | 'DELETE'
+    | 'PATCH'
+    | 'OPTIONS'
+    | 'HEAD'
+    | 'CONNECT'
+    | 'TRACE';
+
+type CorsAllowedHeader =
+    | 'Accept'
+    | 'Authorization'
+    | 'Content-Type'
+    | 'Origin'
+    | 'X-Requested-With'
+    | 'Access-Control-Allow-Origin'
+    | 'Access-Control-Allow-Headers'
+    | 'Cache-Control'
+    | 'Pragma'
+
+type CorsExposedHeader =
+    | 'Content-Length'
+    | 'X-Knowledge-Base-Version'
+    | 'X-Request-ID'
+    | 'X-RateLimit-Limit'
+    | 'X-RateLimit-Remaining'
+    | 'X-RateLimit-Reset'
+    | 'Authorization'
+    | string; // fallback for custom headers
+
+export type CorsOptionsCustom = {
+    origin?: StaticOrigin;
+    methods?: CorsHttpMethod | CorsHttpMethod[];
+    allowedHeaders?: CorsAllowedHeader | CorsAllowedHeader[];
+    exposedHeaders?: CorsExposedHeader | CorsExposedHeader[];
+    credentials?: boolean;
+    maxAge?: number;
+    preflightContinue?: boolean;
+    optionsSuccessStatus?: number;
+};
