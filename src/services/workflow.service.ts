@@ -6,6 +6,7 @@ import { generateRoute } from '../generators/route.generator';
 import { generateType } from '../generators/type.generator';
 import { generateAppTs } from '../generators/app.generator';
 import { generateServerTs } from '../generators/server.generator';
+import { generateTSConfigWithComments } from '../generators/tsconfig.generator';
 
 export const generateWorkflow = async () => {
     const workflow = workflows.workflows;
@@ -13,6 +14,8 @@ export const generateWorkflow = async () => {
 
     const baseDir = path.join(__dirname, '../../generated', workflows.name);
     await fs.ensureDir(baseDir);
+    await generateTSConfigWithComments(baseDir);
+
 
     let controllerNames = [];
 
