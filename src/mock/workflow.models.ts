@@ -4,6 +4,9 @@ export const workflows: Workflows =
 {
     id: "1",
     name: "Test",
+    cors: {
+        origin: ["https://example.com"]
+    },
     workflows: [
 
         {
