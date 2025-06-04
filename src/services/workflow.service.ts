@@ -4,6 +4,7 @@ import { workflows } from '../mock/workflow.models';
 import { generateController } from '../generators/controller.generator';
 import { generateRoute } from '../generators/route.generator';
 import { generateType } from '../generators/type.generator';
+import { generateAppTs } from '../generators/app.generator';
 
 export const generateWorkflow = async () => {
     const workflow = workflows.workflows;
@@ -12,15 +13,18 @@ export const generateWorkflow = async () => {
     const baseDir = path.join(__dirname, '../../generated', workflows.name);
     await fs.ensureDir(baseDir);
 
-
+    let controllerNames = [];
 
     for (const controller of workflow) {
+        controllerNames.push(controller.controllers.name);
         await generateType(controller.controllers.name, baseDir, controller.props)
 
         await generateController(controller.controllers.name, baseDir, controller.props);
 
         await generateRoute(controller.controllers.name, controller.controllers.routes, baseDir);
+
     }
+    await generateAppTs(baseDir, controllerNames)
 
     return { message: 'Workflow generated successfully.' };
 };
