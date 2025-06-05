@@ -28,7 +28,7 @@ import {${capitalize(name)}Service } from '../services/${name}.service';
   ${getByIdFunc}
   ${updateByIdFunc}
   ${deleteByIdFunc}
-`;
+`.trim();
 
   const targetPath = path.join(baseDir, 'src/controllers');
   await fs.ensureDir(targetPath);
