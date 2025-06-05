@@ -49,7 +49,7 @@ datasource db {
                 }
                 else {
                     model += `  ${relation.controller} ${capitalize(relation.controller)}  @relation(fields: [${relation.controller}Id], references: [id])\n`
-                    model += `  ${relation.controller}   String   @unique\n`
+                    model += `  ${relation.controller}Id   String   @unique\n`
                 }
             }
             else if (relation.relation === "one-to-many") {
