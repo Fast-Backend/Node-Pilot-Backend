@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 
 
 export const generateTSConfigWithComments = async (baseDir: string) => {
-    const content = `
+  const content = `
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
@@ -111,11 +111,11 @@ export const generateTSConfigWithComments = async (baseDir: string) => {
 }
     `
 
-    const targetPath = path.join(baseDir, 'src');
-    await fs.ensureDir(targetPath);
+  const targetPath = path.join(baseDir, '/');
+  await fs.ensureDir(targetPath);
 
-    const file = path.join(targetPath, 'tsconfig.json');
-    await fs.writeFile(file, content);
+  const file = path.join(targetPath, 'tsconfig.json');
+  await fs.writeFile(file, content);
 
 }
 
