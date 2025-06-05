@@ -1,16 +1,17 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { capitalize, pluralizeWord } from '../utils/helpers';
+import { capitalize } from '../utils/helpers';
 import { Properties } from '../types/workflow';
 import { createNew } from './controller/createNew';
 import { getAll } from './controller/getAll';
 import { getById } from './controller/getById';
 import { update } from './controller/update';
 import { deleteById } from './controller/delete';
+import pluralize from 'pluralize';
 
 export const generateController = async (name: string, baseDir: string, properties?: Properties[]) => {
-  const controllerName = pluralizeWord(capitalize(name));
-  const allData = pluralizeWord(name);
+  const controllerName = pluralize(capitalize(name));
+  const allData = pluralize(name);
   const getAllfunc = getAll(name, controllerName, allData);
   const createFunc = createNew(name, properties)
   const getByIdFunc = getById(name);
