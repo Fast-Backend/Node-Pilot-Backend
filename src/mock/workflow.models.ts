@@ -19,6 +19,13 @@ export const workflows: Workflows =
             }, {
                 name: "age", type: "number", nullable: false
             }],
+            relations: [
+                {
+                    controller: "trade",
+                    relation: "many-to-many",
+                    isParent: true
+                }
+            ],
             createdAt: new Date(),
             updatedAt: new Date()
         },
@@ -36,6 +43,13 @@ export const workflows: Workflows =
                     type: "email"
                 }]
             }],
+            relations: [
+                {
+                    controller: "user",
+                    relation: "many-to-many",
+                    isParent: false
+                }
+            ],
             createdAt: new Date(),
             updatedAt: new Date()
         }
