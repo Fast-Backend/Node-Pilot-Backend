@@ -1,11 +1,5 @@
-import pluralize from 'pluralize';
 import { FieldType, Properties } from '../types/workflow';
 
-export function pluralizeWord(word: string): string {
-    if (!word || typeof word !== 'string') return word;
-
-    return pluralize(word);;
-}
 
 export const capitalize = (name: string) => {
     const data = name.charAt(0).toUpperCase() + name.slice(1);
