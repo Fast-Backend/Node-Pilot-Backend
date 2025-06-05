@@ -10,6 +10,7 @@ import { generateTSConfigWithComments } from '../generators/tsconfig.generator';
 import { generatePrismaService } from '../generators/service.generator';
 import { generateSchemaPrisma } from '../generators/prisma-schema.generator';
 import { generatePrismaClientFile } from '../generators/prisma_lib.generator';
+import { generatePackageJson } from '../generators/package_json.generator';
 
 export const generateWorkflow = async () => {
     const workflow = workflows.workflows;
@@ -38,6 +39,7 @@ export const generateWorkflow = async () => {
 
     await generateAppTs(baseDir, controllerNames, workflows.cors)
     await generateServerTs(baseDir);
+    await generatePackageJson(workflows.name, baseDir);
 
     return { message: 'Workflow generated successfully.' };
 };
