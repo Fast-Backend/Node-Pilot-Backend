@@ -1,30 +1,24 @@
 import { capitalize } from "../../utils/helpers";
 
 export const deleteById = (name: string) => {
-    const modelName = capitalize(name);
+  const modelName = capitalize(name);
 
-    const code = `
+  const code = `
 export const delete${modelName} = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
     if (!id) {
-       res.status(400).json({ message: 'Missing ID parameter' });
-       return;
+      res.status(400).json({ message: 'Missing ID parameter' });
+      return;
     }
 
-    const existing = await prisma.${name}.findUnique({
-      where: { id },
-    });
+    const deleted = await ${modelName}Service.delete(id);
 
-    if (!existing) {
-       res.status(404).json({ message: '${modelName} not found' });
-       return;
+    if (!deleted) {
+      res.status(404).json({ message: '${modelName} not found' });
+      return;
     }
-
-    await prisma.${name}.delete({
-      where: { id },
-    });
 
     res.status(204).send(); // No Content
   } catch (error) {
@@ -34,5 +28,5 @@ export const delete${modelName} = async (req: Request, res: Response): Promise<v
 };
 `.trim();
 
-    return code;
+  return code;
 };
