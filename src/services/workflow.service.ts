@@ -7,6 +7,7 @@ import { generateType } from '../generators/type.generator';
 import { generateAppTs } from '../generators/app.generator';
 import { generateServerTs } from '../generators/server.generator';
 import { generateTSConfigWithComments } from '../generators/tsconfig.generator';
+import { generatePrismaService } from '../generators/service.generator';
 
 export const generateWorkflow = async () => {
     const workflow = workflows.workflows;
@@ -22,6 +23,8 @@ export const generateWorkflow = async () => {
     for (const controller of workflow) {
         controllerNames.push(controller.controllers.name);
         await generateType(controller.controllers.name, baseDir, controller.props)
+
+        await generatePrismaService({ modelName: controller.controllers.name, baseDir });
 
         await generateController(controller.controllers.name, baseDir, controller.props);
 
