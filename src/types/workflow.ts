@@ -26,7 +26,14 @@ export type Workflow = {
     props?: Properties[]
     createdAt: Date;
     updatedAt: Date;
+    relations?: Relation[];
 };
+
+export type Relation = {
+    relation: "one-to-one" | "one-to-many" | "many-to-many";
+    isParent: boolean;
+    controller: string;
+}
 
 export type Properties = {
     name: string;
