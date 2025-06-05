@@ -18,12 +18,10 @@ export const generateController = async (name: string, baseDir: string, properti
   const deleteByIdFunc = deleteById(name);
   const code = `
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 ${createFunc && `import { z } from 'zod';
 import { ${capitalize(name)}Type } from "../types/${name}";
+import {${capitalize(name)}Service } from '../services/${name}.service';
 `}
-
-const prisma = new PrismaClient();
   ${getAllfunc}
   ${createFunc}
   ${getByIdFunc}
