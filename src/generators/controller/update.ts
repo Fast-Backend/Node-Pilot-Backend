@@ -2,23 +2,23 @@ import { Properties } from "../../types/workflow";
 import { capitalize, mapZodType } from "../../utils/helpers";
 
 export const update = (
-    name: string,
-    properties?: Properties[]
+  name: string,
+  properties?: Properties[]
 ) => {
-    const modelName = capitalize(name);
+  const modelName = capitalize(name);
 
-    const zodSchema =
-        properties && properties.length
-            ? `const update${modelName}Schema = z.object({\n` +
-            properties
-                .map((prop) => `  ${prop.name}: ${mapZodType(prop)}`)
-                .join(',\n') +
-            `\n}).partial();\n\n`
-            : '';
+  const zodSchema =
+    properties && properties.length
+      ? `const update${modelName}Schema = z.object({\n` +
+      properties
+        .map((prop) => `  ${prop.name}: ${mapZodType(prop)}`)
+        .join(',\n') +
+      `\n}).partial();\n\n`
+      : '';
 
-    const validationBlock =
-        properties && properties.length
-            ? `
+  const validationBlock =
+    properties && properties.length
+      ? `
     const parsed = update${modelName}Schema.safeParse(req.body);
     if (!parsed.success) {
        res.status(400).json({ message: 'Validation failed', errors: parsed.error.errors });
@@ -26,32 +26,26 @@ export const update = (
     }
     const data = parsed.data;
     `
-            : `const data = req.body;`;
+      : `const data = req.body;`;
 
-    const code = `
+  const code = `
 
 ${zodSchema}export const update${modelName} = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     if (!id) {
-       res.status(400).json({ message: 'Missing ID parameter' });
-       return;
+      res.status(400).json({ message: 'Missing ID parameter' });
+      return;
     }
+
     ${validationBlock}
 
-    const existing = await prisma.${name}.findUnique({
-      where: { id },
-    });
+    const updated = await ${modelName}Service.update(id, data);
 
-    if (!existing) {
-       res.status(404).json({ message: '${modelName} not found' });
-       return;
+    if (!updated) {
+      res.status(404).json({ message: '${modelName} not found' });
+      return;
     }
-
-    const updated = await prisma.${name}.update({
-      where: { id },
-      data,
-    });
 
     res.status(200).json(updated);
   } catch (error) {
@@ -61,5 +55,5 @@ ${zodSchema}export const update${modelName} = async (req: Request, res: Response
 };
 `.trim();
 
-    return code;
+  return code;
 };
