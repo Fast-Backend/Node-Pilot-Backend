@@ -3,19 +3,17 @@ import path from 'path';
 import { capitalize } from '../utils/helpers';
 
 type PrismaServiceOptions = {
-    baseDir: string;
-    modelName: string; // Should match the Prisma model name (e.g., "User", "Product")
+  baseDir: string;
+  modelName: string; // Should match the Prisma model name (e.g., "User", "Product")
 };
 
 export async function generatePrismaService({ modelName, baseDir }: PrismaServiceOptions) {
-    const camelModel = modelName.charAt(0).toLowerCase() + modelName.slice(1);
+  const camelModel = modelName.charAt(0).toLowerCase() + modelName.slice(1);
 
-    const content = `
+  const content = `
 
-import { PrismaClient } from '@prisma/client';
 import { ${capitalize(modelName)}Type } from '../types/${modelName}';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 export const ${capitalize(modelName)}Service = {
   async getAll(query: any) {
@@ -96,9 +94,9 @@ async update(id: string, data: Partial<${capitalize(modelName)}Type>){
 };
 `.trim();
 
-    const targetPath = path.join(baseDir, 'src/services');
-    await fs.ensureDir(targetPath);
+  const targetPath = path.join(baseDir, 'src/services');
+  await fs.ensureDir(targetPath);
 
-    const file = path.join(targetPath, `${modelName}.service.ts`);
-    await fs.writeFile(file, content);
+  const file = path.join(targetPath, `${modelName}.service.ts`);
+  await fs.writeFile(file, content);
 }
