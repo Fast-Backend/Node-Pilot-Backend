@@ -9,6 +9,7 @@ import { generateServerTs } from '../generators/server.generator';
 import { generateTSConfigWithComments } from '../generators/tsconfig.generator';
 import { generatePrismaService } from '../generators/service.generator';
 import { generateSchemaPrisma } from '../generators/prisma-schema.generator';
+import { generatePrismaClientFile } from '../generators/prisma_lib.generator';
 
 export const generateWorkflow = async () => {
     const workflow = workflows.workflows;
@@ -32,6 +33,7 @@ export const generateWorkflow = async () => {
         await generateRoute(controller.controllers.name, controller.controllers.routes, baseDir);
 
     }
+    await generatePrismaClientFile(baseDir);
     await generateSchemaPrisma(baseDir, workflow);
 
     await generateAppTs(baseDir, controllerNames, workflows.cors)
