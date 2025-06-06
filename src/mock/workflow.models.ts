@@ -22,7 +22,7 @@ export const workflows: Workflows =
             relations: [
                 {
                     controller: "trade",
-                    relation: "one-to-one",
+                    relation: "one-to-many",
                     isParent: true
                 }
             ],
@@ -46,7 +46,7 @@ export const workflows: Workflows =
             relations: [
                 {
                     controller: "user",
-                    relation: "one-to-one",
+                    relation: "one-to-many",
                     isParent: false
                 }
             ],
