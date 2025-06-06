@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { Properties } from '../types/workflow';
+import { Properties, Relation, Workflow } from '../types/workflow';
 import { capitalize, mapFieldType } from '../utils/helpers';
 
-export const generateType = async (name: string, baseDir: string, properties?: Properties[]) => {
+export const generateType = async (name: string, baseDir: string, relations?: Relation[], properties?: Properties[]) => {
 
     if (properties?.length === 0 || !properties) {
         return;
@@ -15,8 +15,14 @@ export const generateType = async (name: string, baseDir: string, properties?: P
         const nullableUnion = prop.nullable ? ' | null' : '';
         return `  ${prop.name}${optional}: ${mapFieldType(prop.type)}${nullableUnion};`;
     });
-
-    const content = `export type ${typeName} = {\n${lines.join('\n')}\n};\n`;
+    const r = relations && relations?.map((relation) => {
+        if (!relation.isParent) {
+            if (relation.relation === "one-to-one" || relation.relation === "one-to-many") {
+                return `\t${relation.controller}: {\n\t\tconnect: {\n\t\t\tid: string\n\t\t}\n\t}`
+            }
+        }
+    })
+    const content = `export type ${typeName} = {\n${lines.join('\n')}\n${r?.join('\n')}\n};\n`;
 
     const targetPath = path.join(baseDir, 'src/types');
     await fs.ensureDir(targetPath);
