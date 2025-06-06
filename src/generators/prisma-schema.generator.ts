@@ -58,7 +58,7 @@ datasource db {
                 }
                 else {
                     model += `  ${relation.controller} ${capitalize(relation.controller)}  @relation(fields: [${relation.controller}Id], references: [id])\n`
-                    model += `  ${relation.controller}   String\n`
+                    model += `  ${relation.controller}Id   String\n`
                 }
             }
             else {
