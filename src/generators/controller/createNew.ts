@@ -1,10 +1,27 @@
-import { Properties } from "../../types/workflow";
+import { Properties, Relation } from "../../types/workflow";
 import { capitalize, mapZodType } from "../../utils/helpers";
 
 
-export const createNew = (name: string, properties?: Properties[]) => {
+export const createNew = (name: string, properties?: Properties[], relations?: Relation[]) => {
   const typeName = capitalize(name);
   const modelName = capitalize(name);
+  const relationships = relations?.map((r) => {
+    if (!r.isParent) {
+      if (r.relation === "one-to-many" || r.relation === "one-to-one") {
+        return `
+      const existing${capitalize(r.controller)} = await prisma.${r.controller}.findUnique({
+        where: { id: data.${r.controller}.connect.id }
+      });
+
+      if (!existing${capitalize(r.controller)}) {
+        res.status(404).json({ message: "${capitalize(r.controller)} not found" });
+        return;
+      }
+`
+      }
+    }
+  })
+
 
   const zodSchema =
     properties && properties.length
@@ -22,14 +39,15 @@ export const createNew = (name: string, properties?: Properties[]) => {
         res.status(400).json({ message: 'Validation failed', errors: parsed.error.errors });
         return;
     }
-    const data = parsed.data;
+    const data = req.body;
   `
     : `const data = req.body;`;
 
   const code = `
 ${zodSchema}export const create${typeName} = async (req: Request<{}, {}, ${typeName}Type>, res: Response): Promise<void> => {
   try {
-    ${validationBlock}
+    ${validationBlock}  
+    ${relationships}
 
     const new${modelName} = await ${modelName}Service.create(data);
     res.status(201).json(new${modelName});
