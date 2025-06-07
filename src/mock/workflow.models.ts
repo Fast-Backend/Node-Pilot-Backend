@@ -52,6 +52,23 @@ export const workflows: Workflows =
             ],
             createdAt: new Date(),
             updatedAt: new Date()
+        },
+        {
+            id: '12343',
+            controllers: {
+                name: "blog", routes: null
+            },
+            props: [{
+                name: "name", type: "string", nullable: true
+            }, {
+                name: "age", type: "number", nullable: false
+            }, {
+                name: "email", type: "string", nullable: false, validation: [{
+                    type: "email"
+                }]
+            }],
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
     ]
 }
