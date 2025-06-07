@@ -15,14 +15,19 @@ export const generateType = async (name: string, baseDir: string, relations?: Re
         const nullableUnion = prop.nullable ? ' | null' : '';
         return `  ${prop.name}${optional}: ${mapFieldType(prop.type)}${nullableUnion};`;
     });
-    const r = relations && relations?.map((relation) => {
-        if (!relation.isParent) {
-            if (relation.relation === "one-to-one" || relation.relation === "one-to-many") {
-                return `\t${relation.controller}: {\n\t\tconnect: {\n\t\t\tid: string\n\t\t}\n\t}`
+    let r = null;
+    if (relations) {
+        r = relations && relations?.map((relation) => {
+            if (!relation.isParent) {
+                if (relation.relation === "one-to-one" || relation.relation === "one-to-many") {
+                    return `\t${relation.controller}: {\n\t\tconnect: {\n\t\t\tid: string\n\t\t}\n\t}`
+                }
             }
-        }
-    })
-    const content = `export type ${typeName} = {\n${lines.join('\n')}\n${r?.join('\n')}\n};\n`;
+        })
+    }
+
+    console.log(r);
+    const content = `export type ${typeName} = {\n${lines.join('\n')}\n${r ? r?.join('\n') : ""}\n};\n`;
 
     const targetPath = path.join(baseDir, 'src/types');
     await fs.ensureDir(targetPath);
