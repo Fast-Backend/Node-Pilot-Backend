@@ -28,6 +28,13 @@ export type Workflow = {
     createdAt: Date;
     updatedAt: Date;
     relations?: Relation[];
+    cardId?: string;
+    dimensions?: {
+        width: number, height: number
+    }
+    position?: {
+        x: number, y: number
+    };
 };
 
 export type Relation = {
