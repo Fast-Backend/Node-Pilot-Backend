@@ -32,7 +32,7 @@ datasource db {
 
 `;
     for (const w of workflow) {
-        const modelName = w.controllers.name.charAt(0).toUpperCase() + w.controllers.name.slice(1);
+        const modelName = w.name.charAt(0).toUpperCase() + w.name.slice(1);
 
         let model = `model ${modelName} {\n`;
         model += `  id  String   @id @default(uuid())\n`;
