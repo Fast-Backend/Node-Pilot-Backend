@@ -8,10 +8,10 @@
 
 export type RouteMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'GET_ID';
 
-type Controller = {
-    name: string,
-    routes: RouteMethods[] | null;
-}
+// type Controller = {
+//     name: string,
+//     routes: RouteMethods[] | null;
+// }
 
 export type Workflows = {
     id: string;
@@ -22,7 +22,8 @@ export type Workflows = {
 
 export type Workflow = {
     id: string;
-    controllers: Controller;
+    name: string,
+    routes: RouteMethods[] | null;
     props?: Properties[]
     createdAt: Date;
     updatedAt: Date;
