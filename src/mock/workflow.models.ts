@@ -11,9 +11,8 @@ export const workflows: Workflows =
 
         {
             id: 'wf123',
-            controllers: {
-                name: "user", routes: null
-            },
+
+            name: "user", routes: null,
             props: [{
                 name: "name", type: "string", nullable: true
             }, {
@@ -31,9 +30,8 @@ export const workflows: Workflows =
         },
         {
             id: '123',
-            controllers: {
-                name: "trade", routes: null
-            },
+
+            name: "trade", routes: null,
             props: [{
                 name: "name", type: "string", nullable: true
             }, {
@@ -55,9 +53,8 @@ export const workflows: Workflows =
         },
         {
             id: '12343',
-            controllers: {
-                name: "blog", routes: null
-            },
+
+            name: "blog", routes: null,
             props: [{
                 name: "name", type: "string", nullable: true
             }, {
