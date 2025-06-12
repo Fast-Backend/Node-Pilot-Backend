@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { workflows } from '../mock/workflow.models';
 import { generateController } from '../generators/controller.generator';
 import { generateRoute } from '../generators/route.generator';
 import { generateAppTs } from '../generators/app.generator';
@@ -17,7 +16,7 @@ export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
     if (!workflow) throw new Error('Workflow not found');
 
-    const baseDir = path.join(__dirname, '../../generated', workflows.name);
+    const baseDir = path.join(__dirname, '../../generated', data.name);
     await fs.ensureDir(baseDir);
     await generateTSConfigWithComments(baseDir);
 
@@ -38,9 +37,9 @@ export const generateWorkflow = async (data: Workflows) => {
     await generatePrismaClientFile(baseDir);
     await generateSchemaPrisma(baseDir, workflow);
 
-    await generateAppTs(baseDir, controllerNames, workflows.cors)
+    await generateAppTs(baseDir, controllerNames, data.cors)
     await generateServerTs(baseDir);
-    await generatePackageJson(workflows.name, baseDir);
+    await generatePackageJson(data.name, baseDir);
 
     return { message: 'Workflow generated successfully.' };
 };
