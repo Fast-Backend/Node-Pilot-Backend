@@ -11,9 +11,10 @@ import { generateSchemaPrisma } from '../generators/prisma-schema.generator';
 import { generatePrismaClientFile } from '../generators/prisma_lib.generator';
 import { generatePackageJson } from '../generators/package_json.generator';
 import { generateType } from '../generators/type.generator';
+import { Workflows } from '../types/workflow';
 
-export const generateWorkflow = async () => {
-    const workflow = workflows.workflows;
+export const generateWorkflow = async (data: Workflows) => {
+    const workflow = data.workflows;
     if (!workflow) throw new Error('Workflow not found');
 
     const baseDir = path.join(__dirname, '../../generated', workflows.name);
