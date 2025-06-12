@@ -24,14 +24,14 @@ export const generateWorkflow = async () => {
     let controllerNames = [];
 
     for (const controller of workflow) {
-        controllerNames.push(controller.controllers.name);
-        await generateType(controller.controllers.name, baseDir, controller.relations, controller.props)
+        controllerNames.push(controller.name);
+        await generateType(controller.name, baseDir, controller.relations, controller.props)
 
-        await generatePrismaService({ modelName: controller.controllers.name, baseDir });
+        await generatePrismaService({ modelName: controller.name, baseDir });
 
-        await generateController(controller.controllers.name, baseDir, controller.props, controller.relations);
+        await generateController(controller.name, baseDir, controller.props, controller.relations);
 
-        await generateRoute(controller.controllers.name, controller.controllers.routes, baseDir);
+        await generateRoute(controller.name, controller.routes, baseDir);
 
     }
     await generatePrismaClientFile(baseDir);
