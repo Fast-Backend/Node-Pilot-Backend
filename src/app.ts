@@ -4,7 +4,9 @@ import workflowRouter from './routes/workflow.routes';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "*"
+}));
 app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Home page');
