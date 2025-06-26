@@ -45,7 +45,7 @@ export const createNew = (name: string, properties?: Properties[], relations?: R
 ${zodSchema}export const create${typeName} = async (req: Request<{}, {}, ${typeName}Type>, res: Response): Promise<void> => {
   try {
     ${validationBlock}  
-    ${relationships}
+    ${relationships.join("")}
 
     const new${modelName} = await ${modelName}Service.create(data);
     res.status(201).json(new${modelName});
