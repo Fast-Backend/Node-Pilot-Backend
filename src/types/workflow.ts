@@ -6,7 +6,7 @@
 //     usesService?: boolean;
 // };
 
-export type RouteMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'GET_ID';
+// export type RouteMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'GET_ID';
 
 // type Controller = {
 //     name: string,
@@ -23,7 +23,7 @@ export type Workflows = {
 export type Workflow = {
     id: string;
     name: string,
-    routes: RouteMethods[] | null;
+    // routes: RouteMethods[] | null;
     props?: Properties[]
     createdAt: Date;
     updatedAt: Date;

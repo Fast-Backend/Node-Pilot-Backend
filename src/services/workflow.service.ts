@@ -31,7 +31,7 @@ export const generateWorkflow = async (data: Workflows) => {
 
         await generateController(controller.name, baseDir, controller.props, controller.relations);
 
-        await generateRoute(controller.name, controller.routes, baseDir);
+        await generateRoute(controller.name, baseDir);
 
     }
     await generatePrismaClientFile(baseDir);
