@@ -26,7 +26,6 @@ export const generateType = async (name: string, baseDir: string, relations?: Re
         })
     }
 
-    console.log(r);
     const content = `export type ${typeName} = {\n${lines.join('\n')}\n${r ? r?.join('\n') : ""}\n};\n`;
 
     const targetPath = path.join(baseDir, 'src/types');
