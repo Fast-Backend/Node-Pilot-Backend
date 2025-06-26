@@ -1,14 +1,12 @@
 import { Properties, Relation } from "../../types/workflow";
 import { capitalize, mapZodType } from "../../utils/helpers";
 
-
 export const createNew = (name: string, properties?: Properties[], relations?: Relation[]) => {
   const typeName = capitalize(name);
   const modelName = capitalize(name);
-  const relationships = relations?.map((r) => {
-    if (!r.isParent) {
-      if (r.relation === "one-to-many" || r.relation === "one-to-one") {
-        return `
+  const relationships: string[] = relations?.flatMap((r) => {
+    if (!r.isParent && (r.relation === "one-to-many" || r.relation === "one-to-one")) {
+      return `
       const existing${capitalize(r.controller)} = await prisma.${r.controller}.findUnique({
         where: { id: data.${r.controller}.connect.id }
       });
@@ -17,10 +15,10 @@ export const createNew = (name: string, properties?: Properties[], relations?: R
         res.status(404).json({ message: "${capitalize(r.controller)} not found" });
         return;
       }
-`
-      }
+    `;
     }
-  })
+    return []; // skip if conditions not met
+  }) ?? [];
 
 
   const zodSchema =
@@ -57,6 +55,5 @@ ${zodSchema}export const create${typeName} = async (req: Request<{}, {}, ${typeN
   }
 };
 `;
-
   return code;
 };
