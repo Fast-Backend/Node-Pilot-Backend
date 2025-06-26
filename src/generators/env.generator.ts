@@ -8,7 +8,7 @@ export const generateEnvFile = async (
 DATABASE_URL=
   `.trim() + '\n';
 
-    const targetPath = path.join(baseDir, 'src');
+    const targetPath = path.join(baseDir, '');
     await fs.ensureDir(targetPath);
 
     const file = path.join(targetPath, '.env');
