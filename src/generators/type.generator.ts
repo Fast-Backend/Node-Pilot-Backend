@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { Properties, Relation, Workflow } from '../types/workflow';
+import { Properties, Relation } from '../types/workflow';
 import { capitalize, mapFieldType } from '../utils/helpers';
 
 export const generateType = async (name: string, baseDir: string, relations?: Relation[], properties?: Properties[]) => {
