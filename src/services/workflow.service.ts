@@ -11,6 +11,7 @@ import { generatePrismaClientFile } from '../generators/prisma_lib.generator';
 import { generatePackageJson } from '../generators/package_json.generator';
 import { generateType } from '../generators/type.generator';
 import { Workflows } from '../types/workflow';
+import { generateEnvFile } from '../generators/env.generator';
 
 export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
@@ -40,6 +41,7 @@ export const generateWorkflow = async (data: Workflows) => {
     await generateAppTs(baseDir, controllerNames, data.cors)
     await generateServerTs(baseDir);
     await generatePackageJson(data.name, baseDir);
+    await generateEnvFile(baseDir);
 
     return { message: 'Workflow generated successfully.' };
 };
