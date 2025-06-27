@@ -3,6 +3,6 @@ import { handleWorkflowGenerate } from '../controllers/workflow.controller';
 
 const workflowRouter = Router();
 
-workflowRouter.post('/workflows/generate', handleWorkflowGenerate);
+workflowRouter.post('/generate', handleWorkflowGenerate);
 
 export default workflowRouter;
