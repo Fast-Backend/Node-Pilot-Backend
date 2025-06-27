@@ -1,119 +1,213 @@
 # 🌊 VIBES
 
-This is a generated Node.js backend project built with TypeScript, Express, Prisma, and PostgreSQL. It includes basic routing setup, CORS configuration, and a ready-to-use structure for scalable backend development.
+**VIBES** is a code generator that scaffolds a full-featured backend application using Node.js, TypeScript, Express, Prisma, and PostgreSQL.
+
+It gives you a clean, modular, and production-friendly codebase instantly — so you can focus on building features instead of boilerplate.
 
 ---
 
 ## 🧰 Tech Stack
 
 - **Node.js** – Runtime environment  
-- **Express** – Web server framework  
-- **TypeScript** – Static typing and modern JavaScript tooling  
+- **Express** – Web framework for routing and middleware  
+- **TypeScript** – Static typing and tooling  
 - **PostgreSQL** – Relational database  
-- **Prisma** – Modern ORM for TypeScript and Node.js
+- **Prisma** – ORM for type-safe database access
+
+---
+
+## 🧠 What VIBES Does
+
+The **VIBES Code Generator** automatically creates a ready-to-run backend application by:
+
+- ✅ Creating a modular folder structure (controllers, routes, services, types, etc.)
+- ✅ Generating REST API endpoints based on your input
+- ✅ Wiring up route registration and middleware automatically
+- ✅ Generating the Prisma schema and configuration
+- ✅ Setting up CORS, body parsing, and environment config
+- ✅ Preparing a `.env` template for PostgreSQL connection
+- ✅ Zipping the project and making it downloadable
+
+---
+
+## 🛠 How to Use the Generated Project
+
+Once you’ve downloaded and unzipped your project from the client side, follow the instructions below to get started.
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Install dependencies
+### 1. Install Dependencies
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ---
 
-### 2. Set up PostgreSQL
+### 2. Set Up PostgreSQL
 
-Create a new PostgreSQL database using your preferred tool (e.g., pgAdmin, CLI, Supabase, etc.).
+Create a new PostgreSQL database locally or using a cloud service like Supabase or Render.
 
 ---
 
-### 3. Configure \`.env\`
+### 3. Configure `.env`
 
-locate the \`.env\` file at the root of the project and add your PostgreSQL connection string:
+At the root of the project, you’ll find a `.env` file. Replace the `DATABASE_URL` with your actual PostgreSQL connection string:
 
-\`\`\`env
+```env
 DATABASE_URL="postgresql://username:password@localhost:5432/dbname?schema=public"
-\`\`\`
+```
 
-#### 🔎 Example:
-\`\`\`env
+#### Example:
+
+```env
 DATABASE_URL="postgresql://postgres:mysecretpassword@localhost:5432/mydb?schema=public"
-\`\`\`
+```
 
 ---
 
-### 4. Push Prisma schema to the database
+### 4. Push Prisma Schema
 
-Once your \`.env\` file is set up, initialize your database with Prisma:
+Use the following command to sync your Prisma schema with your database:
 
-\`\`\`bash
+```bash
 npx prisma db push
-\`\`\`
+```
 
-> This updates your database to match the Prisma schema (without using migrations).
+> This creates the necessary tables in your database without using migrations.
 
 ---
 
-## 🛠 Project Structure
+### 5. Start the Development Server
 
-\`\`\`bash
+```bash
+npm run dev
+```
+
+> This runs the project in watch mode using `ts-node-dev`.
+
+For production:
+
+```bash
+npm run build
+node dist/server.js
+```
+
+---
+
+## 📁 Project Structure
+
+```bash
 prisma/
-├── schema.prisma/    # Generated prisma schema
+├── schema.prisma         # Prisma schema definition
 
 src/
-├── controllers/      # Generated controller files
-├── lib/              # Generated lib file
-├── routes/           # Generated route files
-├── services/         # Generated service files
-├── types/            # Generated type files
-├── app.ts            # Express app setup
-├── server.ts         # Express server setup
+├── controllers/          # Logic for handling requests
+├── lib/                  # Shared utilities
+├── routes/               # Express route definitions
+├── services/             # Business logic and DB operations
+├── types/                # Shared type definitions
+├── app.ts                # Express app setup
+├── server.ts             # Entry point for the app
 
-.env                  # env file
-package.json          # packages and libraries
-tsconfig.json         # typescript setup
-
-\`\`\`
-
-Your routes will be automatically registered and prefixed with \`/api/<name>\`.
-
----
-
-## 🧪 Running the App
-
-You can start the development server using:
-
-\`\`\`bash
-npm run dev
-\`\`\`
-
-> Or compile to JavaScript and run with \`node\` if you prefer a production-ready build.
+.env                      # Environment configuration
+package.json              # Project metadata and scripts
+tsconfig.json             # TypeScript configuration
+```
 
 ---
 
 ## ✅ Example API Usage
 
-\`\`\`http
+```http
 GET http://localhost:3000/
-\`\`\`
+```
 
 Response:
-\`\`\`
+```
 Home page
-\`\`\`
+```
 
-All generated routes are accessible under \`/api/<resource>\`.
+Each generated resource is available under `/api/<resource>`, e.g.:
 
----
-
-## 📦 Notes
-
-- This code was generated automatically for quick scaffolding.
-- You can add additional models to your Prisma schema (\`prisma/schema.prisma\`) and re-run \`npx prisma db push\`.
+```http
+GET http://localhost:3000/api/user
+```
 
 ---
 
-Enjoy building! 🚀
+## 🗂 Example Workflow
+
+Let’s say you generate a `user` module. The platform will automatically create:
+
+- `src/routes/user.routes.ts`
+- `src/controllers/user.controller.ts`
+- `src/services/user.service.ts`
+- `src/types/user.types.ts`
+
+It will also:
+
+- Register the route under `/api/user`
+- Wire the module into `app.ts`
+- Reflect the resource in your Prisma schema
+
+You can immediately start building logic into your controller and service files.
+
+---
+
+## 🧹 Cleaning Up
+
+The generator also handles cleanup of temporary folders after packaging the project. If you wish to manually remove the generated files later, simply delete the base folder.
+
+---
+
+## 🧪 Running in Production
+
+To build and run:
+
+```bash
+npm run build
+node dist/server.js
+```
+
+Make sure your environment variables are configured properly and your PostgreSQL instance is accessible.
+
+---
+
+## 🔧 Customizing Prisma
+
+To update your Prisma models:
+
+1. Open `prisma/schema.prisma`
+2. Add or modify models
+3. Run:
+
+```bash
+npx prisma db push
+```
+
+You can also introspect an existing DB:
+
+```bash
+npx prisma db pull
+```
+
+Or generate types:
+
+```bash
+npx prisma generate
+```
+
+---
+
+## 💬 Support and Contribution
+
+Support channels and contribution guidelines will be available soon. Stay tuned!
+
+---
+
+## ✨ Enjoy building with **VIBES**!
+
+This platform is made to help you move fast without sacrificing code quality. Whether you’re building an MVP, a microservice, or a full API, VIBES gives you the foundation to build with confidence.
