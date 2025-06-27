@@ -12,6 +12,7 @@ import { generatePackageJson } from '../generators/package_json.generator';
 import { generateType } from '../generators/type.generator';
 import { Workflows } from '../types/workflow';
 import { generateEnvFile } from '../generators/env.generator';
+import { generateReadme } from '../generators/readme.generator';
 
 export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
@@ -44,6 +45,7 @@ export const generateWorkflow = async (data: Workflows) => {
     await generateServerTs(baseDir);
     await generatePackageJson(data.name, baseDir);
     await generateEnvFile(baseDir);
+    await generateReadme({ baseDir, projectName: data.name })
 
     return { message: 'Workflow generated successfully.', baseDir };
 };
