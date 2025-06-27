@@ -70,20 +70,20 @@ npx prisma db push
 
 \`\`\`bash
 prisma/
-├── schema.prisma/    # Generated prisma schema
+├── schema.prisma         # Prisma schema definition
 
 src/
-├── controllers/      # Generated controller files
-├── lib/              # Generated lib file
-├── routes/           # Generated route files
-├── services/         # Generated service files
-├── types/            # Generated type files
-├── app.ts            # Express app setup
-├── server.ts         # Express server setup
+├── controllers/          # Logic for handling requests
+├── lib/                  # Shared utilities
+├── routes/               # Express route definitions
+├── services/             # Business logic and DB operations
+├── types/                # Shared type definitions
+├── app.ts                # Express app setup
+├── server.ts             # Entry point for the app
 
-.env                  # env file
-package.json          # packages and libraries
-tsconfig.json         # typescript setup
+.env                      # Environment configuration
+package.json              # Project metadata and scripts
+tsconfig.json             # TypeScript configuration
 
 \`\`\`
 
