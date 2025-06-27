@@ -11,6 +11,6 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Home page');
 });
-app.use('/api', workflowRouter);
+app.use('/api/workflows', workflowRouter);
 
 export default app;
