@@ -2,3 +2,4 @@ node_modules
 .env
 generated
 /src/generated/prisma
+dist
