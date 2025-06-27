@@ -5,7 +5,9 @@ import workflowRouter from './routes/workflow.routes';
 const app = express();
 
 app.use(cors({
-    origin: "https://node-pilot-frontend.onrender.com/"
+    origin: "https://node-pilot-frontend.onrender.com",
+    credentials: true,
+
 }));
 app.use(express.json());
 app.get('/', (req, res) => {
