@@ -17,7 +17,9 @@ export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
     if (!workflow) throw new Error('Workflow not found');
 
-    const baseDir = path.join(__dirname, '../../generated', data.name);
+    const genDir = generateFolderName()
+
+    const baseDir = path.join(__dirname, '../../generated', genDir, data.name);
     await fs.ensureDir(baseDir);
     await generateTSConfigWithComments(baseDir);
 
@@ -43,5 +45,27 @@ export const generateWorkflow = async (data: Workflows) => {
     await generatePackageJson(data.name, baseDir);
     await generateEnvFile(baseDir);
 
-    return { message: 'Workflow generated successfully.' };
+    return { message: 'Workflow generated successfully.', baseDir };
+};
+
+export const generateFolderName = (): string => {
+    const now = new Date();
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const datePart = [
+        now.getFullYear(),
+        pad(now.getMonth() + 1),
+        pad(now.getDate()),
+    ].join('-');
+
+    const timePart = [
+        pad(now.getHours()),
+        pad(now.getMinutes()),
+        pad(now.getSeconds()),
+    ].join('-');
+
+    const randomPart = Math.random().toString(36).substring(2, 8); // 6-char alphanumeric
+
+    return `${datePart}_${timePart}_${randomPart}`;
 };
