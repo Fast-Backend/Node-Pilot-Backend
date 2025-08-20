@@ -26,6 +26,9 @@ The **VIBES Code Generator** automatically creates a ready-to-run backend applic
 - ✅ Generating the Prisma schema and configuration
 - ✅ Setting up CORS, body parsing, and environment config
 - ✅ Preparing a `.env` template for PostgreSQL connection
+- ✅ **NEW**: Interactive Swagger/OpenAPI documentation
+- ✅ **NEW**: Intelligent test data seeding with Faker.js
+- ✅ **NEW**: Configurable project features and templates
 - ✅ Zipping the project and making it downloadable
 
 ---
@@ -135,6 +138,66 @@ Each generated resource is available under `/api/<resource>`, e.g.:
 ```http
 GET http://localhost:3000/api/user
 ```
+
+---
+
+## 🆕 New Features
+
+### 📚 Interactive API Documentation (Swagger)
+
+When enabled, your generated project includes:
+
+**Swagger UI Interface:**
+- **URL**: `http://localhost:3000/api-docs`
+- **Features**: Interactive API testing, request/response schemas, endpoint documentation
+
+**OpenAPI Specification:**
+- **JSON**: `http://localhost:3000/api-docs.json`
+- **YAML**: `docs/openapi.yaml`
+
+**Usage:**
+```bash
+# Start your server
+npm run dev
+
+# Open browser and navigate to:
+# http://localhost:3000/api-docs
+```
+
+### 🌱 Test Data Seeding
+
+When enabled, your generated project includes intelligent test data generation:
+
+**Available Commands:**
+```bash
+# Generate test data (preserves existing records)
+npm run seed
+
+# Reset database and generate fresh data
+npm run seed:reset
+
+# Advanced seeding options
+node seed-script.js --help
+```
+
+**Environment Variables:**
+```env
+SEED_COUNT=50          # Number of records per entity (default: 10)
+SEED_LOCALE=en         # Faker locale for generated data (default: en)
+```
+
+**Generated Files:**
+- `prisma/seed.ts` - Main seeding script
+- `prisma/seeders/` - Individual entity seeders with smart data generation
+- `seed-script.js` - Advanced seeding CLI tool
+
+**Smart Data Generation:**
+The seeder automatically generates realistic data based on property names:
+- `email` → `faker.internet.email()`
+- `firstName` → `faker.person.firstName()`
+- `phone` → `faker.phone.number()`
+- `address` → `faker.location.streetAddress()`
+- `price` → `faker.commerce.price()`
 
 ---
 
