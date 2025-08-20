@@ -1,36 +1,39 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { capitalize } from '../utils/helpers';
+import { capitalize, validateEntityName, validatePropertyName } from '../utils/helpers';
 import { Properties, Relation } from '../types/workflow';
-import { createNew } from './controller/createNew';
-import { getAll } from './controller/getAll';
-import { getById } from './controller/getById';
-import { update } from './controller/update';
-import { deleteById } from './controller/delete';
-import pluralize from 'pluralize';
+import { generateControllerTemplate } from '../templates/controller.template';
 
 export const generateController = async (name: string, baseDir: string, properties?: Properties[], relations?: Relation[]) => {
-  const controllerName = pluralize(capitalize(name));
-  const allData = pluralize(name);
-  const getAllfunc = getAll(name, controllerName, allData);
-  const createFunc = createNew(name, properties, relations)
-  const getByIdFunc = getById(name);
-  const updateByIdFunc = update(name, properties)
-  const deleteByIdFunc = deleteById(name);
-  const code = `
-import { Request, Response } from 'express';
-${createFunc && `import { z } from 'zod';
-import { ${capitalize(name)}Type } from "../types/${name}";
-import {${capitalize(name)}Service } from '../services/${name}.service';
-${relations && `import prisma from '../lib/prisma';`}
+  // Validate entity name
+  const entityValidation = validateEntityName(name);
+  if (!entityValidation.isValid) {
+    throw new Error(`Invalid entity name "${name}": ${entityValidation.errors.join(', ')}`);
+  }
 
-`}
-  ${getAllfunc}
-  ${createFunc}
-  ${getByIdFunc}
-  ${updateByIdFunc}
-  ${deleteByIdFunc}
-`.trim();
+  // Validate property names
+  if (properties) {
+    for (const prop of properties) {
+      const propValidation = validatePropertyName(prop.name);
+      if (!propValidation.isValid) {
+        throw new Error(`Invalid property name "${prop.name}" in entity "${name}": ${propValidation.errors.join(', ')}`);
+      }
+    }
+  }
+
+  const template = generateControllerTemplate(name, properties, relations);
+  
+  const code = `${template.imports}
+
+${template.methods.getAll}
+
+${template.methods.getById}
+
+${template.methods.create}
+
+${template.methods.update}
+
+${template.methods.delete}`;
 
   const targetPath = path.join(baseDir, 'src/controllers');
   await fs.ensureDir(targetPath);
