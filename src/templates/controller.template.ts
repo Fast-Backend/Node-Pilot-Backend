@@ -114,13 +114,23 @@ function generateCreateWithValidation(
   const zodSchema = properties
     .map((prop) => `  ${prop.name}: ${mapZodType(prop)}`)
     .join(',\n');
+    
+  const relationSchema = relations?.filter(r => !r.isParent)
+    .map(r => `  ${r.controller}: z.object({
+    connect: z.object({
+      id: z.string()
+    })
+  }).optional()`)
+    .join(',\n') || '';
+    
+  const fullSchema = [zodSchema, relationSchema].filter(Boolean).join(',\n');
 
   const relationValidation = relations?.filter(r => !r.isParent)
     .map(r => `
   // Validate ${r.controller} exists
-  if (data.${r.controller}Id) {
+  if (data.${r.controller}?.connect?.id) {
     const existing${r.controller.charAt(0).toUpperCase() + r.controller.slice(1)} = await prisma.${r.controller}.findUnique({
-      where: { id: data.${r.controller}Id }
+      where: { id: data.${r.controller}.connect.id }
     });
     if (!existing${r.controller.charAt(0).toUpperCase() + r.controller.slice(1)}) {
       throw new ApiError(404, '${r.controller.charAt(0).toUpperCase() + r.controller.slice(1)} not found');
@@ -128,7 +138,7 @@ function generateCreateWithValidation(
   }`).join('') || '';
 
   return `const ${name}Schema = z.object({
-${zodSchema}
+${fullSchema}
 });
 
 export const create${capitalizedName} = catchAsync(async (req: Request<{}, {}, ${capitalizedName}Type>, res: Response): Promise<void> => {
