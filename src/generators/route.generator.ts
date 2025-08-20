@@ -9,13 +9,13 @@ export const generateRoute = async (
     // methods: RouteMethods[] | null,
     baseDir: string
 ) => {
-    const controllerName = pluralize(capitalize(name))
+    const capitalizedName = capitalize(name)
     let routers = `
-router.get('/', getAll${controllerName});
-router.get('/:id', get${capitalize(name)}ById);
-router.post('', create${capitalize(name)});
-router.put('/:id', update${capitalize(name)});
-router.delete('/:id', delete${capitalize(name)});`;
+router.get('/', getAll${capitalizedName});
+router.get('/:id', get${capitalizedName}ById);
+router.post('', create${capitalizedName});
+router.put('/:id', update${capitalizedName});
+router.delete('/:id', delete${capitalizedName});`;
 
     //     if (methods === null) {
     //         routers = `
@@ -50,7 +50,7 @@ router.delete('/:id', delete${capitalize(name)});`;
     //         routers = routeLines.join('\n');
     //     }
 
-    let importStatement = `import { getAll${controllerName}, get${capitalize(name)}ById, create${capitalize(name)}, update${capitalize(name)}, delete${capitalize(name)} } from '../controllers/${name}.controller';`;
+    let importStatement = `import { getAll${capitalizedName}, get${capitalizedName}ById, create${capitalizedName}, update${capitalizedName}, delete${capitalizedName} } from '../controllers/${name}.controller';`;
 
     // if (methods === null) {
     //     importStatement = `import { getAll${controllerName}, get${capitalize(name)}ById, create${capitalize(name)}, update${capitalize(name)}, delete${capitalize(name)} } from '../controllers/${name}.controller';`;
