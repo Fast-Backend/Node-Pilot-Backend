@@ -103,3 +103,87 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   }
 }
+// {
+//   "compilerOptions": {
+//     /* Language and Environment */
+//     "target": "es2016",
+//     "lib": [
+//       "ES2020"
+//     ],
+//     "module": "commonjs",
+//     "moduleResolution": "node",
+//     /* Emit */
+//     "outDir": "./dist",
+//     "rootDir": "./src",
+//     "sourceMap": true,
+//     "declaration": true,
+//     "declarationMap": true,
+//     "removeComments": false,
+//     "noEmitOnError": true,
+//     /* Interop Constraints */
+//     "esModuleInterop": true,
+//     "allowSyntheticDefaultImports": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "isolatedModules": true,
+//     /* Type Checking - Strict Mode */
+//     "strict": true,
+//     "noImplicitAny": true,
+//     "strictNullChecks": true,
+//     "strictFunctionTypes": true,
+//     "strictBindCallApply": true,
+//     "strictPropertyInitialization": true,
+//     "noImplicitThis": true,
+//     "useUnknownInCatchVariables": true,
+//     "alwaysStrict": true,
+//     /* Code Quality */
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "exactOptionalPropertyTypes": true,
+//     "noImplicitReturns": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "noUncheckedIndexedAccess": true,
+//     "noImplicitOverride": true,
+//     "noPropertyAccessFromIndexSignature": true,
+//     /* Module Resolution */
+//     "resolveJsonModule": true,
+//     "skipLibCheck": true,
+//     /* Paths */
+//     "baseUrl": "./",
+//     "paths": {
+//       "@/*": [
+//         "src/*"
+//       ],
+//       "@/types/*": [
+//         "src/types/*"
+//       ],
+//       "@/utils/*": [
+//         "src/utils/*"
+//       ],
+//       "@/middleware/*": [
+//         "src/middleware/*"
+//       ],
+//       "@/controllers/*": [
+//         "src/controllers/*"
+//       ],
+//       "@/services/*": [
+//         "src/services/*"
+//       ],
+//       "@/generators/*": [
+//         "src/generators/*"
+//       ],
+//       "@/templates/*": [
+//         "src/templates/*"
+//       ]
+//     }
+//   },
+//   "include": [
+//     "src/**/*"
+//   ],
+//   "exclude": [
+//     "node_modules",
+//     "dist",
+//     "generated",
+//     "**/*.test.ts",
+//     "**/*.spec.ts"
+//   ]
+// }
