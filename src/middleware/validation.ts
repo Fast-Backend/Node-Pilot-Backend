@@ -76,11 +76,47 @@ const CorsOptionsSchema = z.object({
   optionsSuccessStatus: z.number().optional()
 });
 
+const ProjectFeaturesSchema = z.object({
+  testDataSeeding: z.object({
+    enabled: z.boolean(),
+    recordCount: z.number().min(1).max(1000),
+    locale: z.string().min(1),
+    customSeed: z.boolean()
+  }),
+  apiDocumentation: z.object({
+    enabled: z.boolean(),
+    title: z.string(),
+    description: z.string(),
+    version: z.string().min(1),
+    includeSwaggerUI: z.boolean()
+  }),
+  emailAuth: z.object({
+    enabled: z.boolean(),
+    provider: z.enum(['nodemailer', 'sendgrid', 'aws-ses']),
+    templates: z.object({
+      verification: z.boolean(),
+      passwordReset: z.boolean(),
+      welcome: z.boolean()
+    })
+  }),
+  oauthProviders: z.object({
+    enabled: z.boolean(),
+    providers: z.array(z.enum(['google', 'github', 'facebook', 'twitter'])),
+    callbackUrls: z.record(z.string())
+  }),
+  paymentIntegration: z.object({
+    enabled: z.boolean(),
+    provider: z.enum(['stripe', 'paypal', 'square']),
+    features: z.array(z.enum(['subscriptions', 'one-time-payments', 'webhooks']))
+  })
+});
+
 const WorkflowsSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1).max(50),
   workflows: z.array(WorkflowSchema).min(1).max(20),
-  cors: CorsOptionsSchema.optional()
+  cors: CorsOptionsSchema.optional(),
+  features: ProjectFeaturesSchema.optional()
 });
 
 export const validateWorkflowRequest = (req: Request, res: Response, next: NextFunction) => {
