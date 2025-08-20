@@ -13,6 +13,9 @@ import { generateType } from '../generators/type.generator';
 import { Workflows } from '../types/workflow';
 import { generateEnvFile } from '../generators/env.generator';
 import { generateReadme } from '../generators/readme.generator';
+import { generateTestDataSeeder } from '../generators/seeder.generator';
+import { generateSwaggerDocs } from '../generators/swagger.generator';
+import { generateUtils } from '../generators/utils.generator';
 
 export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
@@ -23,7 +26,7 @@ export const generateWorkflow = async (data: Workflows) => {
     const baseDir = path.join(__dirname, '../../generated', genDir, data.name);
     await fs.ensureDir(baseDir);
     await generateTSConfigWithComments(baseDir);
-
+    await generateUtils(baseDir);
 
     let controllerNames = [];
 
@@ -45,7 +48,39 @@ export const generateWorkflow = async (data: Workflows) => {
     await generateServerTs(baseDir);
     await generatePackageJson(data.name, baseDir);
     await generateEnvFile(baseDir);
-    await generateReadme({ baseDir, projectName: data.name })
+    await generateReadme({ 
+        baseDir, 
+        projectName: data.name,
+        hasSwagger: data.features?.apiDocumentation.enabled || false,
+        hasSeeding: data.features?.testDataSeeding.enabled || false
+    })
+
+    // Generate optional features if enabled
+    if (data.features) {
+        // Generate test data seeding if enabled
+        if (data.features.testDataSeeding.enabled) {
+            await generateTestDataSeeder({
+                baseDir,
+                workflows: workflow,
+                recordCount: data.features.testDataSeeding.recordCount,
+                locale: data.features.testDataSeeding.locale,
+                customSeed: data.features.testDataSeeding.customSeed,
+            });
+        }
+
+        // Generate API documentation if enabled
+        if (data.features.apiDocumentation.enabled) {
+            await generateSwaggerDocs({
+                baseDir,
+                workflows: workflow,
+                title: data.features.apiDocumentation.title || data.name,
+                description: data.features.apiDocumentation.description || `API documentation for ${data.name}`,
+                version: data.features.apiDocumentation.version,
+                includeSwaggerUI: data.features.apiDocumentation.includeSwaggerUI,
+                projectName: data.name,
+            });
+        }
+    }
 
     return { message: 'Workflow generated successfully.', baseDir };
 };
