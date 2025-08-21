@@ -17,6 +17,7 @@ import { generateTestDataSeeder } from '../generators/seeder.generator';
 import { generateSwaggerDocs } from '../generators/swagger.generator';
 import { generateUtils } from '../generators/utils.generator';
 import { generateEmailAuth } from '../generators/emailAuth.generator';
+import { generateOAuthFiles } from '../generators/oauth.generator';
 
 export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
@@ -45,16 +46,17 @@ export const generateWorkflow = async (data: Workflows) => {
     await generatePrismaClientFile(baseDir);
     await generateSchemaPrisma(baseDir, workflow);
 
-    await generateAppTs(baseDir, controllerNames, data.cors)
+    await generateAppTs(baseDir, controllerNames, data.cors, data.features?.oauthProviders.enabled || false)
     await generateServerTs(baseDir);
     await generatePackageJson(data.name, baseDir);
-    await generateEnvFile(baseDir);
+    await generateEnvFile(baseDir, data.features);
     await generateReadme({ 
         baseDir, 
         projectName: data.name,
         hasSwagger: data.features?.apiDocumentation.enabled || false,
         hasSeeding: data.features?.testDataSeeding.enabled || false,
-        hasEmailAuth: data.features?.emailAuth.enabled || false
+        hasEmailAuth: data.features?.emailAuth.enabled || false,
+        hasOAuth: data.features?.oauthProviders.enabled || false
     })
 
     // Generate optional features if enabled
@@ -94,6 +96,15 @@ export const generateWorkflow = async (data: Workflows) => {
                     passwordReset: true,
                     welcome: false
                 }
+            });
+        }
+
+        // Generate OAuth providers if enabled
+        if (data.features.oauthProviders.enabled) {
+            await generateOAuthFiles(baseDir, {
+                enabled: data.features.oauthProviders.enabled,
+                providers: data.features.oauthProviders.providers,
+                callbackUrls: data.features.oauthProviders.callbackUrls
             });
         }
     }
