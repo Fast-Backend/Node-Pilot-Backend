@@ -1,6 +1,6 @@
-# 🌊 VIBES
+# 🌊 Node-Flow
 
-**VIBES** is a code generator that scaffolds a full-featured backend application using Node.js, TypeScript, Express, Prisma, and PostgreSQL.
+**Node-Flow** is a code generator that scaffolds a full-featured backend application using Node.js, TypeScript, Express, Prisma, and PostgreSQL.
 
 It gives you a clean, modular, and production-friendly codebase instantly — so you can focus on building features instead of boilerplate.
 
@@ -16,9 +16,9 @@ It gives you a clean, modular, and production-friendly codebase instantly — so
 
 ---
 
-## 🧠 What VIBES Does
+## 🧠 What Node-Flow Does
 
-The **VIBES Code Generator** automatically creates a ready-to-run backend application by:
+The **Node-Flow Code Generator** automatically creates a ready-to-run backend application by:
 
 - ✅ Creating a modular folder structure (controllers, routes, services, types, etc.)
 - ✅ Generating REST API endpoints based on your input
@@ -271,6 +271,6 @@ Support channels and contribution guidelines will be available soon. Stay tuned!
 
 ---
 
-## ✨ Enjoy building with **VIBES**!
+## ✨ Enjoy building with **Node-Flow**!
 
-This platform is made to help you move fast without sacrificing code quality. Whether you’re building an MVP, a microservice, or a full API, VIBES gives you the foundation to build with confidence.
+This platform is made to help you move fast without sacrificing code quality. Whether you're building an MVP, a microservice, or a full API, Node-Flow gives you the foundation to build with confidence.

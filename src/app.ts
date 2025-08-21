@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 // Health check endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'VIBES Backend Code Generator API',
+    message: 'Node-Flow Backend Code Generator API',
     version: '1.0.0',
     status: 'healthy',
     timestamp: new Date().toISOString()
