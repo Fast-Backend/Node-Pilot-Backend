@@ -6,9 +6,10 @@ interface ReadmeOptions {
     projectName?: string;
     hasSwagger?: boolean;
     hasSeeding?: boolean;
+    hasEmailAuth?: boolean;
 }
 
-export const generateReadme = async ({ baseDir, projectName = 'Generated Node.js Backend', hasSwagger = false, hasSeeding = false }: ReadmeOptions) => {
+export const generateReadme = async ({ baseDir, projectName = 'Generated Node.js Backend', hasSwagger = false, hasSeeding = false, hasEmailAuth = false }: ReadmeOptions) => {
     const content = `# 🌊 ${projectName}
 
 This is a generated Node.js backend project built with TypeScript, Express, Prisma, and PostgreSQL. It includes basic routing setup, CORS configuration, and a ready-to-use structure for scalable backend development.
@@ -175,6 +176,72 @@ SEED_LOCALE=en         # Faker locale for generated data
 - \`seed-script.js\` - Advanced seeding utilities
 
 ---
+` : ''}${hasEmailAuth ? `
+## 🔐 Email Authentication
+
+This project includes a complete email authentication system with verification and password reset functionality.
+
+### Authentication Endpoints:
+
+\`\`\`http
+POST /api/auth/register     # User registration
+POST /api/auth/login        # User login
+POST /api/auth/logout       # User logout
+POST /api/auth/refresh      # Refresh access token
+POST /api/auth/verify-email # Email verification
+POST /api/auth/forgot-password    # Request password reset
+POST /api/auth/reset-password     # Complete password reset
+\`\`\`
+
+### Environment Variables:
+\`\`\`env
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key
+JWT_REFRESH_SECRET=your-refresh-token-secret
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Email Configuration (choose one provider)
+# Nodemailer
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# SendGrid
+SENDGRID_API_KEY=your-sendgrid-api-key
+
+# Resend
+RESEND_API_KEY=your-resend-api-key
+
+# Application URLs
+FRONTEND_URL=http://localhost:3000
+BACKEND_URL=http://localhost:3000
+\`\`\`
+
+### Features:
+- **User Registration** with email verification
+- **Login/Logout** with JWT tokens
+- **Password Reset** via email
+- **Refresh Token** rotation
+- **Rate Limiting** for security
+- **Professional Email Templates**
+- **Multiple Email Providers** support
+
+### Usage Example:
+\`\`\`bash
+# Register a new user
+curl -X POST http://localhost:3000/api/auth/register \\
+  -H "Content-Type: application/json" \\
+  -d '{"email":"user@example.com","password":"securepassword"}'
+
+# Login
+curl -X POST http://localhost:3000/api/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{"email":"user@example.com","password":"securepassword"}'
+\`\`\`
+
+---
 ` : ''}
 ## 📦 Notes
 
@@ -182,6 +249,7 @@ SEED_LOCALE=en         # Faker locale for generated data
 - You can add additional models to your Prisma schema (\`prisma/schema.prisma\`) and re-run \`npx prisma db push\`.
 ${hasSeeding ? '- Test data seeding helps you quickly populate your database with realistic sample data.' : ''}
 ${hasSwagger ? '- API documentation is automatically updated when you modify your endpoints.' : ''}
+${hasEmailAuth ? '- Email authentication provides secure user management with verification and password reset flows.' : ''}
 
 ---
 
