@@ -18,6 +18,7 @@ export type Workflows = {
     name: string;
     workflows: Workflow[]
     cors?: CorsOptionsCustom;
+    features?: ProjectFeatures;
 }
 
 export type Workflow = {
@@ -132,3 +133,38 @@ export type CorsOptionsCustom = {
     preflightContinue?: boolean;
     optionsSuccessStatus?: number;
 };
+
+export interface ProjectFeatures {
+  testDataSeeding: {
+    enabled: boolean;
+    recordCount: number;
+    locale: string;
+    customSeed: boolean;
+  };
+  apiDocumentation: {
+    enabled: boolean;
+    title: string;
+    description: string;
+    version: string;
+    includeSwaggerUI: boolean;
+  };
+  emailAuth: {
+    enabled: boolean;
+    provider: 'nodemailer' | 'sendgrid' | 'aws-ses';
+    templates: {
+      verification: boolean;
+      passwordReset: boolean;
+      welcome: boolean;
+    };
+  };
+  oauthProviders: {
+    enabled: boolean;
+    providers: ('google' | 'github' | 'facebook' | 'twitter')[];
+    callbackUrls: Record<string, string>;
+  };
+  paymentIntegration: {
+    enabled: boolean;
+    provider: 'stripe' | 'paypal' | 'square';
+    features: ('subscriptions' | 'one-time-payments' | 'webhooks')[];
+  };
+}
