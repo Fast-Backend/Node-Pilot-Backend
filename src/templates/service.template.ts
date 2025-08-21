@@ -42,7 +42,7 @@ import { ApiError } from '../utils/ApiError';`;
         { id: { contains: search, mode: 'insensitive' } }
       ].filter(condition => 
         // Only include fields that exist in the model
-        Object.keys(condition)[0] !== 'name' || this.hasNameField()
+        Object.keys(condition)[0] !== 'name' || hasNameField()
       );
     }
 
@@ -96,7 +96,7 @@ import { ApiError } from '../utils/ApiError';`;
     try {
       const result = await prisma.${camelModel}.create({ 
         data,
-        include: this.getIncludeRelations()
+        include: getIncludeRelations()
       });
       return result;
     } catch (error: any) {
@@ -118,7 +118,7 @@ import { ApiError } from '../utils/ApiError';`;
       const result = await prisma.${camelModel}.update({
         where: { id },
         data,
-        include: this.getIncludeRelations()
+        include: getIncludeRelations()
       });
       return result;
     } catch (error: any) {
@@ -155,19 +155,22 @@ import { ApiError } from '../utils/ApiError';`;
   };
 
   const helperMethods = `
-  private hasNameField(): boolean {
-    // This should be dynamically determined based on the model schema
-    // For now, we'll assume most models have a name field
-    return true;
-  }
+// Helper functions for ${capitalizedName}Service
+const hasNameField = (): boolean => {
+  // This should be dynamically determined based on the model schema
+  // For now, we'll assume most models have a name field
+  return true;
+};
 
-  private getIncludeRelations(): any {
-    // This should be dynamically determined based on the model relations
-    // For now, return empty object - can be extended per model
-    return {};
-  }`;
+const getIncludeRelations = (): any => {
+  // This should be dynamically determined based on the model relations
+  // For now, return empty object - can be extended per model
+  return {};
+};`;
 
-  const serviceClass = `export const ${capitalizedName}Service = {
+  const serviceClass = `${helperMethods}
+
+export const ${capitalizedName}Service = {
   ${methods.getAll},
 
   ${methods.getById},
@@ -176,7 +179,7 @@ import { ApiError } from '../utils/ApiError';`;
 
   ${methods.update},
 
-  ${methods.delete}${helperMethods}
+  ${methods.delete}
 };`;
 
   return {
