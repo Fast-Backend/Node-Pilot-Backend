@@ -91,23 +91,61 @@ export const validatePropertyName = (name: string): { isValid: boolean; errors: 
 
 export const validateRelationships = (relations: any[]): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
-    const entityNames = new Set<string>();
     
-    // Collect all entity names
+    // Group relations by entity pair to detect problematic cycles
+    const relationPairs = new Map<string, { relations: any[], entities: Set<string> }>();
+    
     relations.forEach(relation => {
-        if (relation.controller) {
-            entityNames.add(relation.controller);
+        const entity1 = relation.entity;
+        const entity2 = relation.controller;
+        
+        if (entity1 && entity2 && entity1 !== entity2) {
+            const pairKey = [entity1, entity2].sort().join('->');
+            
+            if (!relationPairs.has(pairKey)) {
+                relationPairs.set(pairKey, { 
+                    relations: [], 
+                    entities: new Set([entity1, entity2])
+                });
+            }
+            relationPairs.get(pairKey)!.relations.push(relation);
         }
     });
     
-    // Check for circular references
+    // Check for problematic circular inheritance patterns
+    // Only flag as problematic if we have strict parent-child relationships forming a cycle
+    const parentChildEdges = new Map<string, Set<string>>();
+    
+    relations.forEach(relation => {
+        const entity = relation.entity;
+        const controller = relation.controller;
+        
+        if (entity && controller && entity !== controller) {
+            // Only consider one-to-one and one-to-many as potentially problematic for inheritance
+            if (relation.relation === 'one-to-one' || relation.relation === 'one-to-many') {
+                if (relation.isParent) {
+                    // entity is parent of controller
+                    if (!parentChildEdges.has(entity)) {
+                        parentChildEdges.set(entity, new Set());
+                    }
+                    parentChildEdges.get(entity)!.add(controller);
+                }
+            }
+        }
+    });
+    
+    // Check for cycles in strict parent-child relationships
     const visited = new Set<string>();
     const recursionStack = new Set<string>();
     
-    const hasCycle = (entity: string): boolean => {
+    const hasCycle = (entity: string, path: string[] = []): boolean => {
         if (recursionStack.has(entity)) {
+            const cycleStart = path.indexOf(entity);
+            const cyclePath = path.slice(cycleStart).concat(entity);
+            errors.push(`Circular inheritance detected: ${cyclePath.join(' → ')}`);
             return true;
         }
+        
         if (visited.has(entity)) {
             return false;
         }
@@ -115,13 +153,9 @@ export const validateRelationships = (relations: any[]): { isValid: boolean; err
         visited.add(entity);
         recursionStack.add(entity);
         
-        // Find all entities this one relates to
-        const relatedEntities = relations
-            .filter(r => r.controller === entity && !r.isParent)
-            .map(r => r.controller);
-        
-        for (const related of relatedEntities) {
-            if (hasCycle(related)) {
+        const children = parentChildEdges.get(entity) || new Set();
+        for (const child of children) {
+            if (hasCycle(child, [...path, entity])) {
                 return true;
             }
         }
@@ -130,10 +164,10 @@ export const validateRelationships = (relations: any[]): { isValid: boolean; err
         return false;
     };
     
-    for (const entityName of entityNames) {
-        if (hasCycle(entityName)) {
-            errors.push(`Circular relationship detected involving entity: ${entityName}`);
-            break;
+    // Only check entities that have parent-child relationships
+    for (const entity of parentChildEdges.keys()) {
+        if (!visited.has(entity)) {
+            hasCycle(entity);
         }
     }
     
