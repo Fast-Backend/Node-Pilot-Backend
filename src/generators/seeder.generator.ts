@@ -114,19 +114,16 @@ async function generateEntitySeeder(baseDir: string, workflow: Workflow, recordC
   const generateFakeData = (props: Properties[]): string => {
     if (!props || props.length === 0) {
       return `
-    // No properties defined for this entity
-    data: {}`;
+    // No properties defined for this entity`;
     }
     
     const dataFields = props.map(prop => {
       const fakerValue = getFakerValueForProperty(prop);
-      return `      ${prop.name}: ${fakerValue}`;
+      return `    ${prop.name}: ${fakerValue}`;
     }).join(',\n');
     
     return `
-    data: {
-${dataFields}
-    }`;
+${dataFields}`;
   };
 
   const content = `import { PrismaClient } from '@prisma/client';
@@ -194,7 +191,29 @@ function getFakerValueForProperty(prop: Properties): string {
     return 'faker.internet.userName()';
   }
   if (propName.includes('password')) {
+    // For actual password fields, generate a hashed password
+    if (propName === 'password') {
+      return '\'$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi\''; // "password"
+    }
     return 'faker.internet.password()';
+  }
+  if (propName.includes('isemailverified') || propName === 'isEmailVerified') {
+    return 'faker.datatype.boolean()';
+  }
+  if (propName.includes('token') && (propName.includes('verification') || propName.includes('reset'))) {
+    return prop.nullable ? '(Math.random() > 0.7 ? null : faker.string.uuid())' : 'faker.string.uuid()';
+  }
+  if (propName.includes('refreshtoken') || propName === 'refreshToken') {
+    return prop.nullable ? '(Math.random() > 0.8 ? null : faker.string.uuid())' : 'faker.string.uuid()';
+  }
+  if (propName.includes('lastloginat') || propName === 'lastLoginAt') {
+    return prop.nullable ? '(Math.random() > 0.3 ? null : faker.date.recent())' : 'faker.date.recent()';
+  }
+  if (propName.includes('createdat') || propName === 'createdAt') {
+    return 'faker.date.past()';
+  }
+  if (propName.includes('updatedat') || propName === 'updatedAt') {
+    return 'faker.date.recent()';
   }
   if (propName.includes('avatar') || propName.includes('image')) {
     return 'faker.image.avatar()';
