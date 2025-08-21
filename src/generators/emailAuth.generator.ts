@@ -31,7 +31,7 @@ export async function generateEmailAuth({ baseDir, projectName, provider, templa
   await generateAuthMiddleware(baseDir);
   
   // Generate auth controllers
-  await generateAuthControllers(baseDir);
+  await generateAuthControllers(baseDir, templates);
   
   // Generate auth routes
   await generateAuthRoutes(baseDir);
@@ -162,7 +162,7 @@ export class JWTService {
       expiresIn: this.ACCESS_TOKEN_EXPIRY,
       issuer: 'your-app-name',
       audience: 'your-app-users',
-    });
+    } as jwt.SignOptions);
   }
 
   static generateRefreshToken(userId: string, email: string): string {
@@ -176,7 +176,7 @@ export class JWTService {
       expiresIn: this.REFRESH_TOKEN_EXPIRY,
       issuer: 'your-app-name',
       audience: 'your-app-users',
-    });
+    } as jwt.SignOptions);
   }
 
   static generateEmailVerificationToken(userId: string, email: string): string {
@@ -190,7 +190,7 @@ export class JWTService {
       expiresIn: '24h',
       issuer: 'your-app-name',
       audience: 'your-app-users',
-    });
+    } as jwt.SignOptions);
   }
 
   static generatePasswordResetToken(userId: string, email: string): string {
@@ -204,7 +204,7 @@ export class JWTService {
       expiresIn: '1h',
       issuer: 'your-app-name',
       audience: 'your-app-users',
-    });
+    } as jwt.SignOptions);
   }
 
   static verifyAccessToken(token: string): JWTPayload {
@@ -674,8 +674,9 @@ declare global {
   namespace Express {
     interface Request {
       user?: {
-        userId: string;
+        id: string;
         email: string;
+        userId?: string; // For compatibility with JWT payloads
       };
     }
   }
@@ -693,7 +694,8 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     const payload = JWTService.verifyAccessToken(token);
     
     req.user = {
-      userId: payload.userId,
+      id: payload.userId,
+      userId: payload.userId, // For compatibility
       email: payload.email,
     };
 
@@ -712,7 +714,8 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction): v
       const payload = JWTService.verifyAccessToken(token);
       
       req.user = {
-        userId: payload.userId,
+        id: payload.userId,
+        userId: payload.userId, // For compatibility
         email: payload.email,
       };
     }
@@ -769,7 +772,7 @@ export const emailVerificationRateLimit = rateLimit({
   await fs.writeFile(path.join(middlewarePath, 'auth.ts'), middlewareContent);
 }
 
-async function generateAuthControllers(baseDir: string): Promise<void> {
+async function generateAuthControllers(baseDir: string, templates?: { verification: boolean; passwordReset: boolean; welcome: boolean }): Promise<void> {
   const controllersContent = `import { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
@@ -999,12 +1002,13 @@ export class AuthController {
       },
     });
 
+${templates?.welcome ? `
     // Send welcome email
     try {
       await EmailService.sendWelcomeEmail(user.email, user.firstName);
     } catch (error) {
       console.error('Failed to send welcome email:', error);
-    }
+    }` : ''}
 
     sendResponse(res, {
       statusCode: 200,
