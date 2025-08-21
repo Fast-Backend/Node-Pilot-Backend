@@ -16,6 +16,7 @@ import { generateReadme } from '../generators/readme.generator';
 import { generateTestDataSeeder } from '../generators/seeder.generator';
 import { generateSwaggerDocs } from '../generators/swagger.generator';
 import { generateUtils } from '../generators/utils.generator';
+import { generateEmailAuth } from '../generators/emailAuth.generator';
 
 export const generateWorkflow = async (data: Workflows) => {
     const workflow = data.workflows;
@@ -52,7 +53,8 @@ export const generateWorkflow = async (data: Workflows) => {
         baseDir, 
         projectName: data.name,
         hasSwagger: data.features?.apiDocumentation.enabled || false,
-        hasSeeding: data.features?.testDataSeeding.enabled || false
+        hasSeeding: data.features?.testDataSeeding.enabled || false,
+        hasEmailAuth: data.features?.emailAuth.enabled || false
     })
 
     // Generate optional features if enabled
@@ -78,6 +80,20 @@ export const generateWorkflow = async (data: Workflows) => {
                 version: data.features.apiDocumentation.version,
                 includeSwaggerUI: data.features.apiDocumentation.includeSwaggerUI,
                 projectName: data.name,
+            });
+        }
+
+        // Generate email authentication if enabled
+        if (data.features.emailAuth.enabled) {
+            await generateEmailAuth({
+                baseDir,
+                projectName: data.name,
+                provider: data.features.emailAuth.provider || 'nodemailer',
+                templates: data.features.emailAuth.templates || {
+                    verification: true,
+                    passwordReset: true,
+                    welcome: false
+                }
             });
         }
     }
