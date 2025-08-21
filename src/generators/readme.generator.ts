@@ -7,9 +7,10 @@ interface ReadmeOptions {
     hasSwagger?: boolean;
     hasSeeding?: boolean;
     hasEmailAuth?: boolean;
+    hasOAuth?: boolean;
 }
 
-export const generateReadme = async ({ baseDir, projectName = 'Generated Node.js Backend', hasSwagger = false, hasSeeding = false, hasEmailAuth = false }: ReadmeOptions) => {
+export const generateReadme = async ({ baseDir, projectName = 'Generated Node.js Backend', hasSwagger = false, hasSeeding = false, hasEmailAuth = false, hasOAuth = false }: ReadmeOptions) => {
     const content = `# 🌊 ${projectName}
 
 This is a generated Node.js backend project built with TypeScript, Express, Prisma, and PostgreSQL. It includes basic routing setup, CORS configuration, and a ready-to-use structure for scalable backend development.
@@ -242,6 +243,80 @@ curl -X POST http://localhost:3000/api/auth/login \\
 \`\`\`
 
 ---
+` : ''}${hasOAuth ? `
+## 🔑 OAuth Authentication
+
+This project includes OAuth authentication with support for multiple social providers.
+
+### OAuth Endpoints:
+
+\`\`\`http
+GET /auth/google           # Initiate Google OAuth
+GET /auth/google/callback  # Google OAuth callback
+GET /auth/github           # Initiate GitHub OAuth  
+GET /auth/github/callback  # GitHub OAuth callback
+GET /auth/facebook         # Initiate Facebook OAuth
+GET /auth/facebook/callback # Facebook OAuth callback
+GET /auth/twitter          # Initiate Twitter OAuth
+GET /auth/twitter/callback # Twitter OAuth callback
+\`\`\`
+
+### Environment Variables:
+
+\`\`\`env
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=http://localhost:8000/auth/google/callback
+
+# GitHub OAuth
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+GITHUB_CALLBACK_URL=http://localhost:8000/auth/github/callback
+
+# Facebook OAuth
+FACEBOOK_APP_ID=your_facebook_app_id
+FACEBOOK_APP_SECRET=your_facebook_app_secret
+FACEBOOK_CALLBACK_URL=http://localhost:8000/auth/facebook/callback
+
+# Twitter OAuth
+TWITTER_CONSUMER_KEY=your_twitter_consumer_key
+TWITTER_CONSUMER_SECRET=your_twitter_consumer_secret
+TWITTER_CALLBACK_URL=http://localhost:8000/auth/twitter/callback
+
+# Frontend URL for OAuth redirects
+CLIENT_URL=http://localhost:3000
+\`\`\`
+
+### Features:
+- **Social Login** with Google, GitHub, Facebook, Twitter
+- **Account Linking** for existing users
+- **JWT Token Generation** after OAuth success
+- **Automatic User Creation** for new OAuth users
+- **Session Management** with Passport.js
+
+### Setup Instructions:
+
+1. **Create OAuth applications** with each provider:
+   - Google: [Google Developers Console](https://console.developers.google.com)
+   - GitHub: [GitHub Developer Settings](https://github.com/settings/developers)
+   - Facebook: [Facebook Developers](https://developers.facebook.com)
+   - Twitter: [Twitter Developer Portal](https://developer.twitter.com)
+
+2. **Configure callback URLs** in your OAuth applications
+3. **Add credentials** to your \`.env\` file
+4. **Test OAuth flow** by visiting the auth endpoints
+
+### Usage Example:
+\`\`\`bash
+# Initiate Google OAuth (redirect to Google)
+curl http://localhost:3000/auth/google
+
+# After successful auth, user will be redirected to:
+# http://localhost:3000/auth/success?token=<jwt_access_token>
+\`\`\`
+
+---
 ` : ''}
 ## 📦 Notes
 
@@ -250,6 +325,7 @@ curl -X POST http://localhost:3000/api/auth/login \\
 ${hasSeeding ? '- Test data seeding helps you quickly populate your database with realistic sample data.' : ''}
 ${hasSwagger ? '- API documentation is automatically updated when you modify your endpoints.' : ''}
 ${hasEmailAuth ? '- Email authentication provides secure user management with verification and password reset flows.' : ''}
+${hasOAuth ? '- OAuth authentication enables seamless social login with Google, GitHub, Facebook, and Twitter.' : ''}
 
 ---
 
