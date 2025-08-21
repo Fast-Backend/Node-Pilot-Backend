@@ -150,7 +150,7 @@ export interface ProjectFeatures {
   };
   emailAuth: {
     enabled: boolean;
-    provider: 'nodemailer' | 'sendgrid' | 'aws-ses';
+    provider: 'nodemailer' | 'sendgrid' | 'resend';
     templates: {
       verification: boolean;
       passwordReset: boolean;
